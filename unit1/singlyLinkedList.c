@@ -100,6 +100,39 @@ void reverse(struct Node **head) {
     *head = prev;
 }
 
+// Function to create a new linked list with alternate elements
+struct Node* createAlternateList(struct Node* head) {
+    if (head == NULL) {
+        return NULL;
+    }
+
+    struct Node* newHead = NULL;
+    struct Node* current = head;
+    int position = 0;
+
+    while (current != NULL) {
+        if (position % 2 == 0) {
+            // Insert at end of new list
+            struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+            newNode->data = current->data;
+            newNode->next = NULL;
+
+            if (newHead == NULL) {
+                newHead = newNode;
+            } else {
+                struct Node* temp = newHead;
+                while (temp->next != NULL) {
+                    temp = temp->next;
+                }
+                temp->next = newNode;
+            }
+        }
+        position++;
+        current = current->next;
+    }
+    return newHead;
+}
+
 int main() {
     int n;
     struct Node *head = NULL;
@@ -111,5 +144,11 @@ int main() {
         insertAtBegin(&head, data);
     }
     traverse(head);
+    
+    // Creating alternate list
+    struct Node* alternateList = createAlternateList(head);
+    printf("Alternate List: ");
+    traverse(alternateList);
+    
     return 0;
 }
