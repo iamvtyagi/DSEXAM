@@ -1,58 +1,38 @@
 #include <stdio.h>
 
-// Function to merge two subarrays
-void merge(int arr[], int left, int mid, int right) {
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
-    
-    int L[n1], R[n2]; // Temporary arrays
-
-    // Copy data to temporary arrays L[] and R[]
-    for (int i = 0; i < n1; i++)
-        L[i] = arr[left + i];
-    for (int j = 0; j < n2; j++)
-        R[j] = arr[mid + 1 + j];
-
-    // Merge the two subarrays back into arr[]
-    int i = 0, j = 0, k = left;
-    
-    while (i < n1 && j < n2) {
-        if (L[i] <= R[j]) {
-            arr[k] = L[i];
-            i++;
-        } else {
-            arr[k] = R[j];
-            j++;
-        }
-        k++;
-    }
-
-    // Copy remaining elements of L[] if any
-    while (i < n1) {
-        arr[k] = L[i];
-        i++;
-        k++;
-    }
-
-    // Copy remaining elements of R[] if any
-    while (j < n2) {
-        arr[k] = R[j];
-        j++;
-        k++;
-    }
+// Function to swap two elements
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-// Merge Sort function
-void mergeSort(int arr[], int left, int right) {
-    if (left < right) {
-        int mid = left + (right - left) / 2;
+// Partition function (using first element as pivot)
+int partition(int arr[], int low, int high) {
+    int pivot = arr[low];  // First element as pivot
+    int i = low + 1; // Index for elements greater than pivot
+    int j = high;    // Index for elements smaller than pivot
 
-        // Recursively sort first and second halves
-        mergeSort(arr, left, mid);
-        mergeSort(arr, mid + 1, right);
+    while (i <= j) {
+        while (i <= high && arr[i] <= pivot) i++; // Move i forward
+        while (j >= low && arr[j] > pivot) j--;   // Move j backward
 
-        // Merge the sorted halves
-        merge(arr, left, mid, right);
+        if (i < j) { // Swap if i and j haven't crossed
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[low], &arr[j]); // Swap pivot to correct position
+    return j;
+}
+
+// Quick Sort function
+void quickSort(int arr[], int low, int high) {
+    if (low < high) {
+        int pi = partition(arr, low, high); // Partition index
+
+        // Recursively sort elements before and after partition
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
     }
 }
 
@@ -65,18 +45,15 @@ void printArray(int arr[], int size) {
 
 // Main function
 int main() {
-    int arr[] = {12, 11, 13, 5, 6, 7};
+    int arr[] = {10, 7, 8, 9, 1, 5};
     int n = sizeof(arr) / sizeof(arr[0]);
 
     printf("Original array: ");
     printArray(arr, n);
 
-    mergeSort(arr, 0, n - 1);
+    quickSort(arr, 0, n - 1);
 
     printf("Sorted array: ");
     printArray(arr, n);
     return 0;
 }
- 
-
-merge sort
